@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Management</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" href="/bootstrapNew.min.css" media="screen"/>
+</head>
+<body>
+
+
+<div class="row">
+<div class="col-lg-8 col-md-7 col-sm-6">
+    <h1>Add an Book</h1>
+
+        <form method="post" >
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <div class="form-group">
+                <label for="book_title">Book Title</label>
+                <input type="text" class="form-control" id="book_title"/>
+            </div>
+            <div class="form-group">
+                <label for="book_author">Book Author</label>
+                <input type="text" class="form-control" id="book_author"/>
+            </div>
+            <div class="form-group">
+                <label for="book_price">Book Price</label>
+                <input type="text" class="form-control" id="book_price"/>
+            </div>
+            <button type="submit" class="btn btn-default" id="btn_submit">Add New Book</button>
+        </form>
+    </div>
+</div>
+<table >
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Author</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="book : ${listBook}">
+        <td th:text="${book.bookTitle}"></td>
+        <td th:text="${book.bookAuthor}"></td>
+        <td th:text="${book.price}"></td>
+    </tr>
+    </tbody>
+</table>
+
+        <script src="../jquery.js" type="application/javascript"></script>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                $('#btn_submit').on("click", function (e) {
+                    e.preventDefault();
+                    var bookTitle = $("#book_title").val();
+                    var bookAuthor = $("#book_author").val();
+                    var price = $("#book_price").val();
+                    if ($.trim(bookTitle) === "") {
+                        alert("You must fill the first name");
+                    }
+                    else if ($.trim(bookAuthor) === "") {
+                        alert("You must fill the last name");
+                    }
+                    else if ($.trim(price) === "") {
+                        alert("You must fill the money");
+                    }
+                    else {
+                        $.ajax({
+                            type: "POST",
+                            url: "/bookmanager/addbook",
+                            data: {bookTitle: bookTitle, bookAuthor: bookAuthor, price: price},
+                            success: function (data) {
+                                if (confirm("Order with Id " + data + " Saved")) {
+                                    window.location.reload();
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+        </script>
+
+
+</body>
+</html>
