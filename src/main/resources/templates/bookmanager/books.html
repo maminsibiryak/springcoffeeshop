@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Products</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" href="/bootstrap.min.css" media="screen"/>
+    <style>
+        .navigation-order{
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 col-lg-offset-3">
+            <a href="/products"><img src="/logo.png" style="width:100%;"/></a>
+        </div>
+    </div>
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>Books</h1>
+
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr th:each="books : ${books}">
+                        <td th:text="${books.bookTitle}"></td>
+                        <td th:text="${books.bookAuthor}"></td>
+                        <td th:text="${books.price}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <form>
+                    <div class="form-group">
+                        <label for="book_title">Book Name:</label>
+                        <input type="text" class="form-control" id="book_title"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="book_author">Book Author:</label>
+                        <input type="text" class="form-control" id="book_author"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="text" class="form-control" id="price"/>
+                    </div>
+                    <button type="submit" class="btn btn-default" id="btn_submit">Add New Book</button>
+                </form>
+            </div>
+        </div>
+        <br />
+        <div class="row navigation-order">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <a href="/bookmanager/studentbookorders">Click here to go to Customer Order Management</a>
+            </div>
+        </div>
+    </div>
+    <div th:replace="fragments/footer :: footer">...</div>
+</div>
+<script src="../jquery.js" type="application/javascript"></script>
+<script type="application/javascript">
+    $(document).ready(function () {
+        $('#btn_submit').on("click",function (e) {
+            e.preventDefault();
+            var bookTitle, bookAuthor, price;
+            bookTitle = $('#book_title').val();
+            bookAuthor = $('#book_author').val();
+            price = $('#price').val();
+            if($.trim(bookTitle) === ""){
+                alert("Product name cannot be empty");
+            }
+            else if($.trim(bookAuthor) === ""){
+                alert("Product name cannot be empty");
+            }
+            else if(!$.trim($.isNumeric(price))){
+                alert("Price must be numeric");
+            }
+            else {
+                var data = {};
+                data["bookAuthor"] = bookAuthor;
+                data["bookTitle"] = bookTitle;
+                data["price"] = price;
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: "/bookmanager/savebook",
+                    data: JSON.stringify(data),
+                    dataType: 'json',
+                    timeout: 6000,
+                    success: function (data) {
+                        if (confirm("Product with Id " +data + " Saved")){
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

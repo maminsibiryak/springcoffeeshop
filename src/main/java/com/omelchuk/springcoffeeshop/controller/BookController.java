@@ -13,30 +13,28 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-@RequestMapping (value = "bookmanager/addbook", method = RequestMethod.GET)
-public String allBook(Model model){
-    model.addAttribute("listBook", bookRepository.findAll());
-    return "bookmanager/addbook";
-}
-
-
-    @RequestMapping(value = "/bookmanager/addbook", method = RequestMethod.POST)
-    @ResponseBody
-    public String addBook(@RequestParam String bookTitle, @RequestParam String bookAuthor, @RequestParam Double price){
-        Book book = new Book();
-        book.setBookTitle(bookTitle);
-        book.setBookAuthor(bookAuthor);
-        book.setPrice(price);
-        bookRepository.save(book);
-        return "bookmanager/addbook";
+    @RequestMapping("/bookmanager/book/{id}")
+    public String book(@PathVariable Long id, Model model){
+        model.addAttribute("book", bookRepository.findOne(id));
+        return "bookmanager/book";
+    }
+    @RequestMapping(value = "/bookmanager/books",method = RequestMethod.GET)
+    public String bookList(Model model){
+        model.addAttribute("books", bookRepository.findAll());
+        return "bookmanager/books";
+    }
+    @RequestMapping(value = "/bookmanager/all",method = RequestMethod.GET)
+    public String all(Model model){
+        model.addAttribute("books", bookRepository.findAll());
+        return "bookmanager/all";
     }
 
-    /*@RequestMapping(value = "/bookmanager/addbook", method = RequestMethod.POST)
+    @RequestMapping(value = "/bookmanager/savebook", method = RequestMethod.POST)
     @ResponseBody
-    public String saveProduct(@RequestBody Book book) {
+    public String saveBook(@RequestBody Book book) {
         bookRepository.save(book);
-        return "/bookmanager/addbook";
-    }*/
+        return String.valueOf(book.getBookId());
+    }
 
 
 }

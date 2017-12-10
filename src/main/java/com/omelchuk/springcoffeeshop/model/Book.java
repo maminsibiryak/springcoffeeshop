@@ -7,17 +7,17 @@ import javax.persistence.*;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long bookId;
     private String bookTitle;
     private String bookAuthor;
     private double price;
 
-    public int getId() {
-        return id;
+    public Long getBookId() {
+        return bookId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
     public String getBookTitle() {
@@ -44,13 +44,5 @@ public class Book {
         this.price = price;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", bookTitle='" + bookTitle + '\'' +
-                ", bookAuthor='" + bookAuthor + '\'' +
-                ", price=" + price +
-                '}';
-    }
+
 }
